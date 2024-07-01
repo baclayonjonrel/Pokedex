@@ -11,23 +11,23 @@ Welcome to the Pokedex App! This app is designed to help you explore and learn a
 
 ## Screenshots
 
-![Home Screen](SimulatorScreenshot1.png)
-![Home Screen](SimulatorScreenshot2.png)
-![Home Screen](SimulatorScreenshot3.png)
-![Home Screen](SimulatorScreenshot4.png)
-![Home Screen](SimulatorScreenshot5.png)
-![Home Screen](SimulatorScreenshot6.png)
-![Home Screen](SimulatorScreenshot7.png)
-![Home Screen](SimulatorScreenshot8.png)
-![Home Screen](SimulatorScreenshot9.png)
-![Home Screen](SimulatorScreenshot10.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot1.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot2.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/vSimulatorScreenshot3.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot4.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot5.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot6.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot7.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot8.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot9.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot10.png)
 
 
 ## Screen Recording
 
 Check out this screen recording to see the app in action:
 
-![Screen Recording](SimulatorScreenRecording.mp4)
+![Screen Recording](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenRecording.mp4)
 
 ## Installation
 
