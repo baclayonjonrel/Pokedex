@@ -13,7 +13,7 @@ struct PokemonDetails: Codable {
     let forms: [Species]?
     let gameIndices: [GameIndex]?
     let height: Int?
-    let heldItems: [JSONAny]?
+    let heldItems: [HeldItem]?
     let id: Int?
     let isDefault: Bool?
     let locationAreaEncounters: String?
@@ -77,6 +77,23 @@ struct GameIndex: Codable {
         case gameIndex = "game_index"
         case version
     }
+}
+
+// MARK: - HeldItem
+struct HeldItem: Codable {
+    let item: Species?
+    let versionDetails: [VersionDetail]?
+
+    enum CodingKeys: String, CodingKey, Codable {
+        case item
+        case versionDetails = "version_details"
+    }
+}
+
+// MARK: - VersionDetail
+struct VersionDetail: Codable {
+    let rarity: Int?
+    let version: Species?
 }
 
 // MARK: - Move

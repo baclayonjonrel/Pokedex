@@ -9,27 +9,23 @@ import Foundation
 import SwiftUI
 import SDWebImageSwiftUI
 
-let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
-
-let rows = [
-        GridItem(.flexible())
-    ]
-
 struct PokemonGridView: View {
     
     @State var pokemonList: [Result] = []
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 30) {
-                ForEach(pokemonList.indices, id: \.self) { index in
-                    if pokemonList[index].details != nil {
-                        PokemonGridCard(pokemon: pokemonList[index])
-                    } else {
-                        EmptyView()
+        GeometryReader { geometry in
+            let isLandscape = geometry.size.width > geometry.size.height
+            let columns: [GridItem] = Array(repeating: .init(.flexible()), count: isLandscape ? 4 : 2)
+            
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 30) {
+                    ForEach(pokemonList.indices, id: \.self) { index in
+                        if pokemonList[index].details != nil {
+                            PokemonGridCard(pokemon: pokemonList[index])
+                        } else {
+                            EmptyView()
+                        }
                     }
                 }
             }
@@ -41,6 +37,9 @@ struct PokemonGridCard: View {
     let pokemon: Result
     @State private var showDetailView = false
     @ObservedObject var apiService = ApiService.shared
+    @State private var pokemonIndexRemove = -1
+    
+    @State var showConf = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -63,7 +62,7 @@ struct PokemonGridCard: View {
                     Spacer()
                 }
                 
-                let imageURL = pokemon.details?.sprites?.frontShiny ?? pokemon.details?.sprites?.frontDefault ?? ""
+                let imageURL = pokemon.details?.sprites?.other?.officialArtwork?.frontShiny ?? ""
                 VStack {
                     Spacer()
                     WebImage(url: URL(string: imageURL))
@@ -77,7 +76,7 @@ struct PokemonGridCard: View {
                         if let types = pokemon.details?.types {
                             ForEach(types, id: \.self) { typeElement in
                                 if let typeName = typeElement.type?.name {
-                                    let backgroundColor = colorForPokemonType(type: typeName.lowercased())
+                                    let backgroundColor = PokemonColors.shared.colorForPokemonType(type: typeName.lowercased())
                                     
                                     Text(typeName)
                                         .font(.system(size: 10))
@@ -93,7 +92,7 @@ struct PokemonGridCard: View {
                     .padding(.bottom, 4)
                 }
             }
-            .background(colorForPokemonType(type: pokemon.details?.types?.first?.type?.name ?? "").opacity(0.8))
+            .background(PokemonColors.shared.colorForPokemonType(type: pokemon.details?.types?.first?.type?.name ?? "").opacity(0.8))
             .cornerRadius(16)
             .frame(width: 150, height: 150)
             .onTapGesture {
@@ -108,7 +107,8 @@ struct PokemonGridCard: View {
                                 Button {
                                     if apiService.isFavoritePokemon(pokemon: pokemon) {
                                         if let index = apiService.favoritePokemons.firstIndex(where: { $0.name == pokemon.name }) {
-                                            apiService.favoritePokemons.remove(at: index)
+                                            self.pokemonIndexRemove = index
+                                            showConf.toggle()
                                         }
                                     } else {
                                         // Check if the pokemon is already in the favoritePokemons list
@@ -119,26 +119,25 @@ struct PokemonGridCard: View {
                                 } label: {
                                     Image(systemName: apiService.isFavoritePokemon(pokemon: pokemon) ? "heart.fill" : "heart")
                                 }
+                                .actionSheet(isPresented: $showConf) {
+                                  ActionSheet(
+                                    title: Text("Remove from favorites?"),
+                                    buttons: [
+                                      .cancel(), .destructive(Text("Yes"), action: {
+                                        print("Deleting...")
+                                          if pokemonIndexRemove >= 0 {
+                                              apiService.favoritePokemons.remove(at: pokemonIndexRemove)
+                                          }
+                                      })
+                                    ]
+                                  )
+                                }       
                             }
                         }
                 }
             }
         }
     }
-    
-    private func colorForPokemonType(type: String) -> Color {
-            switch type {
-                case "fire":
-                    return Color.red
-                case "water":
-                    return Color.blue
-                case "grass":
-                    return Color.green
-                // Add more cases as needed
-                default:
-                    return Color.gray // Default color for unknown types
-            }
-        }
 }
 
 struct PokemonListView: View {
@@ -165,6 +164,9 @@ struct PokemonListCard: View {
     let pokemon: Result
     @State private var showDetailView = false
     @ObservedObject var apiService = ApiService.shared
+    @State private var pokemonIndexRemove = -1
+    
+    @State var showConf = false
     
     var body: some View {
         HStack {
@@ -178,7 +180,7 @@ struct PokemonListCard: View {
                         .ignoresSafeArea()
                 }
                 
-                let imageURL = pokemon.details?.sprites?.frontShiny ?? pokemon.details?.sprites?.frontDefault ?? ""
+                let imageURL = pokemon.details?.sprites?.other?.officialArtwork?.frontShiny ?? ""
                 VStack {
                     Spacer()
                     WebImage(url: URL(string: imageURL))
@@ -186,7 +188,7 @@ struct PokemonListCard: View {
                         .aspectRatio(contentMode: .fit)
                 }
             }
-            .background(colorForPokemonType(type: pokemon.details?.types?.first?.type?.name ?? "").opacity(0.8))
+            .background(PokemonColors.shared.colorForPokemonType(type: pokemon.details?.types?.first?.type?.name ?? "").opacity(0.8))
             .cornerRadius(16)
             .frame(width: 90, height: 90)
             .padding(5)
@@ -204,8 +206,8 @@ struct PokemonListCard: View {
                     if let types = pokemon.details?.types {
                         ForEach(types, id: \.self) { typeElement in
                             if let typeName = typeElement.type?.name {
-                                let backgroundColor = colorForPokemonType(type: typeName.lowercased())
-
+                                //let backgroundColor = colorForPokemonType(type: typeName.lowercased())
+                                let backgroundColor = PokemonColors.shared.colorForPokemonType(type: typeName.lowercased())
                                 Text(typeName)
                                     .font(.system(size: 10))
                                     .foregroundColor(.white)
@@ -224,6 +226,7 @@ struct PokemonListCard: View {
         }
         .frame(width: UIScreen.main.bounds.width)
         .background(.gray.opacity(0.3))
+        .frame(width: UIScreen.main.bounds.width)
         .cornerRadius(10)
         .padding(.horizontal, 5)
         .onTapGesture {
@@ -238,10 +241,10 @@ struct PokemonListCard: View {
                             Button {
                                 if apiService.isFavoritePokemon(pokemon: pokemon) {
                                     if let index = apiService.favoritePokemons.firstIndex(where: { $0.name == pokemon.name }) {
-                                        apiService.favoritePokemons.remove(at: index)
+                                        pokemonIndexRemove = index
+                                        showConf.toggle()
                                     }
                                 } else {
-                                    // Check if the pokemon is already in the favoritePokemons list
                                     if !apiService.favoritePokemons.contains(where: { $0.name == pokemon.name }) {
                                         apiService.favoritePokemons.append(pokemon)
                                     }
@@ -249,64 +252,25 @@ struct PokemonListCard: View {
                             } label: {
                                 Image(systemName: apiService.isFavoritePokemon(pokemon: pokemon) ? "heart.fill" : "heart")
                             }
+                            .actionSheet(isPresented: $showConf) {
+                              ActionSheet(
+                                title: Text("Remove from favorites?"),
+                                buttons: [
+                                  .cancel(), .destructive(Text("Yes"), action: {
+                                    print("Deleting...")
+                                      if pokemonIndexRemove >= 0 {
+                                          apiService.favoritePokemons.remove(at: pokemonIndexRemove)
+                                      }
+                                  })
+                                ]
+                              )
+                            }
                         }
                     }
             }
         }
     }
-    
-    private func colorForPokemonType(type: String) -> Color {
-            switch type {
-                case "fire":
-                    return Color.red
-                case "water":
-                    return Color.blue
-                case "grass":
-                    return Color.green
-                // Add more cases as needed
-                default:
-                    return Color.gray // Default color for unknown types
-            }
-        }
-}
-
-struct WaterShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        Path { path in
-            path.move(to: CGPoint(x: rect.minX, y: rect.midY))
-            path.addQuadCurve(to: CGPoint(x: rect.midX, y: rect.midY),
-                              control: CGPoint(x: rect.width * 0.20, y: rect.height * 0.35))
-            path.addQuadCurve(to: CGPoint(x: rect.maxX, y: rect.midY),
-                              control: CGPoint(x: rect.width * 0.80, y: rect.height * 0.65))
-            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        }
-    }
 }
 
 
-struct PokemonDetailView: View {
-    let pokemon: Result
-    
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        VStack {
-            Text("Pokemon name: \(pokemon.name)")
-            Button {
-                presentationMode.wrappedValue.dismiss()
-            } label: {
-               Text("Close FullScreen")
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Label("Back", systemImage: "arrow.left.circle")
-                }
-            }
-        }
-    }
-}
+

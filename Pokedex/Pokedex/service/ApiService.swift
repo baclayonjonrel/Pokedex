@@ -3,9 +3,9 @@
 //  Pokedex
 //
 //  Created by Jonrel Baclayon on 6/29/24.
-//
 
 import Foundation
+import Combine
 
 class ApiService: ObservableObject {
     // Create a static shared instance
@@ -43,13 +43,16 @@ class ApiService: ObservableObject {
                     var pokemonList = try JSONDecoder().decode(Pokemon.self, from: data)
                     print("Successfully fetched Pokémon list")
                     
+                    // Ensure UI updates are performed on the main thread
+                    DispatchQueue.main.async {
+                        self.fetchedPokemons = pokemonList.results
+                    }
+                    
                     // Here, we'll iterate through pokemonList results and fetch details for each Pokemon
-                    var successful = true
                     let dispatchGroup = DispatchGroup()
                     
                     for index in pokemonList.results.indices {
                         let result = pokemonList.results[index]
-                        self.fetchedPokemons = pokemonList.results
                         
                         dispatchGroup.enter()
                         // Assuming `fetchPokemonDetails` is a method that fetches Pokemon details
@@ -58,16 +61,16 @@ class ApiService: ObservableObject {
                                 dispatchGroup.leave()
                                 return
                             }
-
-                            self.fetchedPokemons[index].details = details
-                            dispatchGroup.leave()
+                            
+                            DispatchQueue.main.async {
+                                self.fetchedPokemons[index].details = details
+                                dispatchGroup.leave()
+                            }
                         }
-
                     }
                     
                     dispatchGroup.notify(queue: .main) {
-                        // Replace the original pokemonList with updated results
-                        
+                        // Notify completion on main thread
                         completionHandler(true)
                     }
                     
@@ -83,7 +86,6 @@ class ApiService: ObservableObject {
         
         task.resume()
     }
-
 
     private func fetchPokemonDetails(url: String, completion: @escaping (PokemonDetails?) -> Void) {
         guard let url = URL(string: url) else {
@@ -106,11 +108,6 @@ class ApiService: ObservableObject {
             
             if let data = data {
                 do {
-                    // Print JSON response as a string
-//                    if let jsonString = String(data: data, encoding: .utf8) {
-//                        print("JSON Response: \(jsonString)")
-//                    }
-
                     let pokemonDetails = try JSONDecoder().decode(PokemonDetails.self, from: data)
                     completion(pokemonDetails)
                 } catch {
@@ -125,15 +122,7 @@ class ApiService: ObservableObject {
     }
 
     func isFavoritePokemon(pokemon: Result) -> Bool {
-        for favoritePokemon in favoritePokemons {
-            print(favoritePokemon.name)
-        }
-        if favoritePokemons.contains(where: { $0.name == pokemon.name }) {
-            return true
-        } else {
-            return false
-        }
+        return favoritePokemons.contains { $0.name == pokemon.name }
     }
-
 }
 
