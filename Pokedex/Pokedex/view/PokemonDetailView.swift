@@ -194,7 +194,6 @@ struct HeldItemView: View {
         }
         .onAppear() {
             let items = pokemon.details?.heldItems
-            print(items)
         }
     }
 }

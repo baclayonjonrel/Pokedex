@@ -13,6 +13,7 @@ struct HomeView: View {
     @State var pokemonList: [Result] = []
     @State var hasFetchedPokemon: Bool = false
     @State var isGridView: Bool = true
+    @State var showSearchView: Bool = false
     
     var body: some View {
         VStack {
@@ -37,15 +38,28 @@ struct HomeView: View {
         .navigationTitle("Home")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    isGridView.toggle()
-                }) {
-                    Image(systemName: isGridView ? "list.bullet" : "rectangle.grid.2x2")
-                        .renderingMode(.template)
+                HStack {
+                    Button(action: {
+                        showSearchView.toggle()
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                            .renderingMode(.template)
+                    }
+                    Button(action: {
+                        isGridView.toggle()
+                    }) {
+                        Image(systemName: isGridView ? "list.bullet" : "rectangle.grid.2x2")
+                            .renderingMode(.template)
+                    }
                 }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $showSearchView) {
+            NavigationStack {
+                SearchView()
+            }
+        }
     }
     func fetchPokemons() -> Void {
         ApiService.shared.getPokemons { res in
