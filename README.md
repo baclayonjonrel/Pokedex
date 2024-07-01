@@ -11,23 +11,24 @@ Welcome to the Pokedex App! This app is designed to help you explore and learn a
 
 ## Screenshots
 
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/168a541d18a2e43016d2ac3ae94e5d859d33a58f/images/SimulatorScreenshot1.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot2.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/vSimulatorScreenshot3.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot4.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot5.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot6.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot7.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot8.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot9.png)
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot10.png)
-
+<div style="overflow-x: scroll; white-space: nowrap;">
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/168a541d18a2e43016d2ac3ae94e5d859d33a58f/images/SimulatorScreenshot1.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot2.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot3.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot4.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot5.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot6.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot7.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot8.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot9.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenshot10.png" alt="Home Screen" width="150"/>
+</div>
 
 ## Screen Recording
 
 Check out this screen recording to see the app in action:
 
-![Screen Recording](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenRecording.mp4)
+[![Screen Recording](https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenRecording.mp4)
 
 ## Installation
 
