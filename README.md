@@ -11,7 +11,7 @@ Welcome to the Pokedex App! This app is designed to help you explore and learn a
 
 ## Screenshots
 
-![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot1.png)
+![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/168a541d18a2e43016d2ac3ae94e5d859d33a58f/images/SimulatorScreenshot1.png)
 ![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot2.png)
 ![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/vSimulatorScreenshot3.png)
 ![Home Screen](https://github.com/baclayonjonrel/Pokedex/blob/main/SimulatorScreenshot4.png)
