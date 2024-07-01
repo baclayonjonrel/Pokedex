@@ -3,12 +3,6 @@
 //  Pokedex
 //
 //  Created by Jonrel Baclayon on 6/29/24.
-//
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let pokemon = try? JSONDecoder().decode(Pokemon.self, from: jsonData)
 
 import Foundation
 
