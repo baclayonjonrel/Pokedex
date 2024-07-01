@@ -40,7 +40,7 @@ class ApiService: ObservableObject {
             
             if let data = data {
                 do {
-                    var pokemonList = try JSONDecoder().decode(Pokemon.self, from: data)
+                    let pokemonList = try JSONDecoder().decode(Pokemon.self, from: data)
                     print("Successfully fetched Pokémon list")
                     
                     // Ensure UI updates are performed on the main thread

@@ -96,7 +96,6 @@ struct PokemonGridCard: View {
             .cornerRadius(16)
             .frame(width: 150, height: 150)
             .onTapGesture {
-                print("selected: \(pokemon.name)")
                 showDetailView.toggle()
             }
             .fullScreenCover(isPresented: $showDetailView) {
@@ -224,13 +223,10 @@ struct PokemonListCard: View {
             }
         Spacer()
         }
-        .frame(width: UIScreen.main.bounds.width)
         .background(.gray.opacity(0.3))
-        .frame(width: UIScreen.main.bounds.width)
         .cornerRadius(10)
         .padding(.horizontal, 5)
         .onTapGesture {
-            print("selected: \(pokemon.name)")
             showDetailView.toggle()
         }
         .fullScreenCover(isPresented: $showDetailView) {
