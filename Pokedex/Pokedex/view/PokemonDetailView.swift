@@ -10,74 +10,133 @@ import SDWebImageSwiftUI
 
 struct PokemonDetailView: View {
     let pokemon: Result
-    
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedSegment = 0
     
     var body: some View {
         ZStack {
-            CurveShape()
-                .fill(PokemonColors.shared.colorForPokemonType(type: pokemon.details?.types?.first?.type?.name ?? "").opacity(0.7))
-                .ignoresSafeArea(.all)
-            
-            
-            VStack {
-                Text(pokemon.name.uppercased())
-                    .font(.system(size: 55))
-                    .fontWeight(.bold)
+            GeometryReader { geometry in
+                let isLandscape = geometry.size.width > geometry.size.height
+                if !isLandscape {
+                    CurveShape()
+                        .fill(PokemonColors.shared.colorForPokemonType(type: pokemon.details?.types?.first?.type?.name ?? "").opacity(0.7))
+                        .ignoresSafeArea(.all)
+                        .offset(y: horizontalSizeClass != .compact ? -150 : 0)
                     
-                HStack {
-                    if let types = pokemon.details?.types {
-                        ForEach(types, id: \.self) { typeElement in
-                            if let typeName = typeElement.type?.name {
-                                let backgroundColor = PokemonColors.shared.colorForPokemonType(type: typeName.lowercased())
-                                
-                                Text(typeName)
-                                    .font(.system(size: 15))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 4)
-                                    .padding(.vertical, 2)
-                                    .background(backgroundColor)
-                                    .cornerRadius(4)
+                    
+                    VStack {
+                        Text(pokemon.name.uppercased())
+                            .font(.system(size: 55))
+                            .fontWeight(.bold)
+                        
+                        HStack {
+                            if let types = pokemon.details?.types {
+                                ForEach(types, id: \.self) { typeElement in
+                                    if let typeName = typeElement.type?.name {
+                                        let backgroundColor = PokemonColors.shared.colorForPokemonType(type: typeName.lowercased())
+                                        
+                                        Text(typeName)
+                                            .font(.system(size: 15))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 4)
+                                            .padding(.vertical, 2)
+                                            .background(backgroundColor)
+                                            .cornerRadius(4)
+                                    }
+                                }
                             }
                         }
+                        let imageURL = pokemon.details?.sprites?.other?.officialArtwork?.frontShiny ?? ""
+                        WebImage(url: URL(string: imageURL))
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 200, height: 200)
+                        
+                        Picker("Select a tab", selection: $selectedSegment) {
+                            Text("About").tag(0)
+                            Text("Base Stats").tag(1)
+                            if pokemon.details?.heldItems?.count != 0{
+                                Text("Evolution").tag(2)
+                            }
+                            Text("Moves").tag(3)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        
+                        if selectedSegment == 0 {
+                            AboutPokemonView(pokemon: pokemon)
+                        } else if selectedSegment == 1 {
+                            BaseStatsView(pokemon: pokemon)
+                        } else if selectedSegment == 2 {
+                            HeldItemView(pokemon: pokemon)
+                        } else if selectedSegment == 3 {
+                            MovesView(pokemon: pokemon)
+                        }
+                        Spacer()
+                    }
+                } else {
+                    HStack {
+                        VStack {
+                            Text(pokemon.name.uppercased())
+                                .font(.system(size: 35))
+                                .fontWeight(.bold)
+                            
+                            HStack {
+                                if let types = pokemon.details?.types {
+                                    ForEach(types, id: \.self) { typeElement in
+                                        if let typeName = typeElement.type?.name {
+                                            let backgroundColor = PokemonColors.shared.colorForPokemonType(type: typeName.lowercased())
+                                            
+                                            Text(typeName)
+                                                .font(.system(size: 15))
+                                                .foregroundColor(.white)
+                                                .padding(.horizontal, 4)
+                                                .padding(.vertical, 2)
+                                                .background(backgroundColor)
+                                                .cornerRadius(4)
+                                        }
+                                    }
+                                }
+                            }
+                            let imageURL = pokemon.details?.sprites?.other?.officialArtwork?.frontShiny ?? ""
+                            WebImage(url: URL(string: imageURL))
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 200, height: 200)
+                        }
+                        Spacer()
+                        VStack {
+                            Picker("Select a tab", selection: $selectedSegment) {
+                                Text("About").tag(0)
+                                Text("Base Stats").tag(1)
+                                if pokemon.details?.heldItems?.count != 0{
+                                    Text("Evolution").tag(2)
+                                }
+                                Text("Moves").tag(3)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            
+                            if selectedSegment == 0 {
+                                AboutPokemonView(pokemon: pokemon)
+                            } else if selectedSegment == 1 {
+                                BaseStatsView(pokemon: pokemon)
+                            } else if selectedSegment == 2 {
+                                HeldItemView(pokemon: pokemon)
+                            } else if selectedSegment == 3 {
+                                MovesView(pokemon: pokemon)
+                            }
+                        }
+                        Spacer()
                     }
                 }
-                let imageURL = pokemon.details?.sprites?.other?.officialArtwork?.frontShiny ?? ""
-                WebImage(url: URL(string: imageURL))
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 200, height: 200)
-            
-                Picker("Select a tab", selection: $selectedSegment) {
-                    Text("About").tag(0)
-                    Text("Base Stats").tag(1)
-                    if pokemon.details?.heldItems?.count != 0{
-                        Text("Evolution").tag(2)
-                    }
-                    Text("Moves").tag(3)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                
-                // Content based on selected segment
-                if selectedSegment == 0 {
-                    AboutPokemonView(pokemon: pokemon)
-                } else if selectedSegment == 1 {
-                    BaseStatsView(pokemon: pokemon)
-                } else if selectedSegment == 2 {
-                    HeldItemView(pokemon: pokemon)
-                } else if selectedSegment == 3 {
-                    MovesView(pokemon: pokemon)
-                }
-                Spacer()
             }
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Label("Back", systemImage: "arrow.left.circle")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Label("Back", systemImage: "arrow.left.circle")
+                    }
                 }
             }
         }
@@ -122,7 +181,7 @@ struct AboutPokemonView: View {
                     }
                 }
             }
-            Spacer()
+            .ignoresSafeArea(.all)
         }
     }
 }
@@ -141,7 +200,6 @@ struct BaseStatsView: View {
                                 Text(stats[index].stat?.name?.capitalized ?? "")
                                 Spacer()
                                 ProgressView(value: Double(stats[index].baseStat ?? 0), total: 100)
-                                    .frame(width: UIScreen.main.bounds.width * 0.5)
                                     .tint(Double(stats[index].baseStat ?? 0) > 60 ? .green : .orange)
                                 }
                             }
@@ -151,6 +209,7 @@ struct BaseStatsView: View {
                 }
             }
         }
+        .ignoresSafeArea(.all)
     }
 }
 
@@ -190,11 +249,12 @@ struct HeldItemView: View {
                     Text("No Stats Available")
                 }
             }
-            .padding(20)
         }
+        .ignoresSafeArea(.all)
         .onAppear() {
             let items = pokemon.details?.heldItems
         }
+        .background(.background)
     }
 }
 
@@ -213,21 +273,18 @@ struct MovesView: View {
                         Spacer()
                         Text("Learn Method")
                     }
-                    ScrollView {
+                    .padding(.horizontal, 20)
+                    List {
                         ForEach((0..<moves.count), id: \.self) { index in
                             HStack {
                                 Text(moves[index].move?.name ?? "")
-                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading) // Ensures left alignment
-                                
-                               // Spacer()
+                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
 
                                 Text(String(moves[index].versionGroupDetails?.first?.levelLearnedAt ?? 0))
-                                    .frame(width: 30, alignment: .trailing) // Fixed width for numeric alignment
-                                
-                                //Spacer()
+                                    .frame(width: 30, alignment: .trailing)
 
                                 Text(moves[index].versionGroupDetails?.first?.moveLearnMethod?.name ?? "")
-                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing) // Ensures left alignment
+                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
                             }
 
 
@@ -237,8 +294,9 @@ struct MovesView: View {
                     Text("No Stats Available")
                 }
             }
-            .padding(20)
+            .ignoresSafeArea(.all)
         }
+        .background(.background)
     }
 }
 

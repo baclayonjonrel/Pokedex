@@ -10,13 +10,27 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct PokemonGridView: View {
-    
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State var pokemonList: [Result] = []
     
     var body: some View {
         GeometryReader { geometry in
             let isLandscape = geometry.size.width > geometry.size.height
-            let columns: [GridItem] = Array(repeating: .init(.flexible()), count: isLandscape ? 4 : 2)
+            let columns: [GridItem] = {
+                if horizontalSizeClass != .compact || isLandscape {
+                    return [
+                        GridItem(.flexible()),
+                        GridItem(.flexible()),
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ]
+                } else {
+                    return [
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ]
+                }
+            }()
             
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 30) {
@@ -116,7 +130,7 @@ struct PokemonGridCard: View {
                                         }
                                     }
                                 } label: {
-                                    Image(systemName: apiService.isFavoritePokemon(pokemon: pokemon) ? "heart.fill" : "heart")
+                                    Image(systemName: apiService.isFavoritePokemon(pokemon: pokemon) ? "star.fill" : "star")
                                 }
                                 .actionSheet(isPresented: $showConf) {
                                   ActionSheet(
@@ -246,7 +260,7 @@ struct PokemonListCard: View {
                                     }
                                 }
                             } label: {
-                                Image(systemName: apiService.isFavoritePokemon(pokemon: pokemon) ? "heart.fill" : "heart")
+                                Image(systemName: apiService.isFavoritePokemon(pokemon: pokemon) ? "star.fill" : "star")
                             }
                             .actionSheet(isPresented: $showConf) {
                               ActionSheet(
