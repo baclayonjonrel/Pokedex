@@ -19,13 +19,13 @@ struct FavoriteView: View {
             if apiService.favoritePokemons.isEmpty {
                 Text("No pokemons are added yet.")
             } else {
-                if isGridView {
-                    PokemonGridView(pokemonList: apiService.favoritePokemons)
-                        .frame(maxHeight: UIScreen.main.bounds.height)
-                } else {
+                //if isGridView {
                     PokemonListView(pokemonList: apiService.favoritePokemons)
                         .frame(maxHeight: UIScreen.main.bounds.height)
-                }
+//                } else {
+//                    PokemonListView(pokemonList: apiService.favoritePokemons)
+//                        .frame(maxHeight: UIScreen.main.bounds.height)
+//                }
             }
         }
         .id(UUID())
@@ -33,12 +33,12 @@ struct FavoriteView: View {
         .navigationTitle("Favorites")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    isGridView.toggle()
-                }) {
-                    Image(systemName: isGridView ? "list.bullet" : "rectangle.grid.2x2")
-                        .renderingMode(.template)
-                }
+//                Button(action: {
+//                    isGridView.toggle()
+//                }) {
+//                    Image(systemName: isGridView ? "list.bullet" : "rectangle.grid.2x2")
+//                        .renderingMode(.template)
+//                }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
