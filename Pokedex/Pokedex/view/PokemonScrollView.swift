@@ -12,6 +12,12 @@ import SDWebImageSwiftUI
 struct PokemonGridView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State var pokemonList: [Result] = []
+    @ObservedObject var apiService = ApiService.shared
+    @State private var pokemonIndexRemove: Int = -1
+    @State private var showDetailView = false
+    @State private var selectedPokemon: Result = Result(name: "", url: "", details: nil)
+    @State private var selectedIndex: Int = -1
+    @State private var showConf = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -37,9 +43,53 @@ struct PokemonGridView: View {
                     ForEach(pokemonList.indices, id: \.self) { index in
                         if pokemonList[index].details != nil {
                             PokemonGridCard(pokemon: pokemonList[index])
+                                .onTapGesture {
+                                    withAnimation {
+                                        showDetailView.toggle()
+                                    }
+                                    apiService.setSelectedPokemon(pokemonList[index])
+                                }
                         } else {
                             EmptyView()
                         }
+                    }
+                }
+            }
+            .fullScreenCover(isPresented: $showDetailView) {
+                if let selectedPokemon = apiService.selectedPokemon {
+                    NavigationView {
+                        PokemonDetailView(pokemon: selectedPokemon)
+                            .toolbar {
+                                ToolbarItem(placement: .navigationBarTrailing) {
+                                    Button {
+                                        if apiService.isFavoritePokemon(pokemon: selectedPokemon) {
+                                            if let selectedIndex = apiService.favoritePokemons.firstIndex(where: { $0.name == selectedPokemon.name }) {
+                                                pokemonIndexRemove = selectedIndex
+                                                showConf.toggle()
+                                            }
+                                        } else {
+                                            if !apiService.favoritePokemons.contains(where: { $0.name ==  selectedPokemon.name }) {
+                                                apiService.favoritePokemons.append(selectedPokemon)
+                                            }
+                                        }
+                                    } label: {
+                                        Image(systemName: apiService.isFavoritePokemon(pokemon: selectedPokemon) ? "star.fill" : "star")
+                                    }
+                                    .actionSheet(isPresented: $showConf) {
+                                        ActionSheet(
+                                            title: Text("Remove from favorites?"),
+                                            buttons: [
+                                                .cancel(), .destructive(Text("Yes"), action: {
+                                                    print("Deleting...")
+                                                    if pokemonIndexRemove >= 0 {
+                                                        apiService.favoritePokemons.remove(at: pokemonIndexRemove)
+                                                    }
+                                                })
+                                            ]
+                                        )
+                                    }
+                                }
+                            }
                     }
                 }
             }
@@ -49,11 +99,7 @@ struct PokemonGridView: View {
 
 struct PokemonGridCard: View {
     let pokemon: Result
-    @State private var showDetailView = false
-    @ObservedObject var apiService = ApiService.shared
-    @State private var pokemonIndexRemove = -1
     
-    @State var showConf = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -109,46 +155,6 @@ struct PokemonGridCard: View {
             .background(PokemonColors.shared.colorForPokemonType(type: pokemon.details?.types?.first?.type?.name ?? "").opacity(0.8))
             .cornerRadius(16)
             .frame(width: 150, height: 150)
-            .onTapGesture {
-                showDetailView.toggle()
-            }
-            .fullScreenCover(isPresented: $showDetailView) {
-                NavigationView {
-                    PokemonDetailView(pokemon: pokemon)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button {
-                                    if apiService.isFavoritePokemon(pokemon: pokemon) {
-                                        if let index = apiService.favoritePokemons.firstIndex(where: { $0.name == pokemon.name }) {
-                                            self.pokemonIndexRemove = index
-                                            showConf.toggle()
-                                        }
-                                    } else {
-                                        // Check if the pokemon is already in the favoritePokemons list
-                                        if !apiService.favoritePokemons.contains(where: { $0.name == pokemon.name }) {
-                                            apiService.favoritePokemons.append(pokemon)
-                                        }
-                                    }
-                                } label: {
-                                    Image(systemName: apiService.isFavoritePokemon(pokemon: pokemon) ? "star.fill" : "star")
-                                }
-                                .actionSheet(isPresented: $showConf) {
-                                  ActionSheet(
-                                    title: Text("Remove from favorites?"),
-                                    buttons: [
-                                      .cancel(), .destructive(Text("Yes"), action: {
-                                        print("Deleting...")
-                                          if pokemonIndexRemove >= 0 {
-                                              apiService.favoritePokemons.remove(at: pokemonIndexRemove)
-                                          }
-                                      })
-                                    ]
-                                  )
-                                }       
-                            }
-                        }
-                }
-            }
         }
     }
 }

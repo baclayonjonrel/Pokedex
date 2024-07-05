@@ -22,10 +22,8 @@ struct HomeView: View {
             } else {
                 if isGridView {
                     PokemonGridView(pokemonList: pokemonList)
-                        .frame(maxHeight: UIScreen.main.bounds.height)
                 } else {
                     PokemonListView(pokemonList: pokemonList)
-                        .frame(maxHeight: UIScreen.main.bounds.height)
                 }
             }
         }

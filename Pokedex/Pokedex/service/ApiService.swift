@@ -14,6 +14,8 @@ class ApiService: ObservableObject {
     @Published var fetchedPokemons: [Result] = []
     @Published var favoritePokemons: [Result] = []
     
+    @Published var selectedPokemon: Result?
+    
     private init() {
         // Private initializer to prevent multiple instances
     }
@@ -111,7 +113,7 @@ class ApiService: ObservableObject {
                     let pokemonDetails = try JSONDecoder().decode(PokemonDetails.self, from: data)
                     completion(pokemonDetails)
                 } catch {
-                    print("Failed to decode Pokemon details JSON: \(error.localizedDescription)")
+                    print("Failed to decode Pokemon details JSON: \(error)")
                     completion(nil)
                 }
             } else {
@@ -123,6 +125,10 @@ class ApiService: ObservableObject {
 
     func isFavoritePokemon(pokemon: Result) -> Bool {
         return favoritePokemons.contains { $0.name == pokemon.name }
+    }
+    
+    func setSelectedPokemon(_ pokemon: Result) {
+        self.selectedPokemon = pokemon
     }
 }
 

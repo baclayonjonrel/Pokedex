@@ -47,12 +47,13 @@ struct PokemonDetailView: View {
                                 }
                             }
                         }
-                        let imageURL = pokemon.details?.sprites?.other?.officialArtwork?.frontShiny ?? ""
-                        WebImage(url: URL(string: imageURL))
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 200, height: 200)
-                        
+                        ZStack {
+                            let imageURL = pokemon.details?.sprites?.other?.officialArtwork?.frontShiny ?? pokemon.details?.sprites?.other?.officialArtwork?.frontDefault ?? ""
+                            WebImage(url: URL(string: imageURL))
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 200, height: 200)
+                        }
                         Picker("Select a tab", selection: $selectedSegment) {
                             Text("About").tag(0)
                             Text("Base Stats").tag(1)
