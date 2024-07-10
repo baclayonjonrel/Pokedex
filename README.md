@@ -28,8 +28,7 @@ Welcome to the Pokedex App! This app is designed to help you explore and learn a
 
 Check out this screen recording to see the app in action:
 
-[![Screen Recording](https://github.com/baclayonjonrel/Pokedex/blob/763edfd52fb0d2cc6da64a19bc6e88b4f6d90ee1/images/SimulatorScreenRecording.mp4)
-*Download the raw file to watch
+[*Check on my porfolio website*](https://jonrelbaclayon.netlify.app/#projects)
 
 ## Installation
 
