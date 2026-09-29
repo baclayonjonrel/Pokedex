@@ -32,27 +32,10 @@ Check out this screen recording to see the app in action:
 
 ## Installation
 
-To get started with the Pokedex App, follow these steps:
-
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/baclayonjonrel/pokedex.git
-    ```
-
-2. Navigate to the project directory:
-    ```bash
-    cd pokedex
-    ```
-
-3. Install dependencies:
-    ```bash
-    npm install
-    ```
-
-4. Run the app:
-    ```bash
-    npm start
-    ```
+1. Clone this repository: `git clone https://github.com/baclayonjonrel/Pokedex.git`.
+2. On a Mac, open `Pokedex/Pokedex.xcodeproj` in Xcode.
+3. Let Xcode resolve any package dependencies, select the Pokedex scheme, and run on an iOS Simulator or device.
+4. The app needs a network connection to load Pokémon data from the PokéAPI.
 
 ## Technologies Used
 
